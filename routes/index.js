@@ -1,9 +1,14 @@
-var express = require('express');
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const messageCtrl = require("../controllers/messageCtrl");
+// READ MESSAGES
+// GET
+router.get("/", messageCtrl.getMessages);
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+// CREATE MESSAGES
+// GET
+router.get("/createMessage", messageCtrl.getCreate);
+// POST
+router.post("/createMessage", messageCtrl.postCreate);
 
 module.exports = router;

@@ -1,5 +1,31 @@
-extends layout
+extend layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  if (!!messages)
+    div(class='h-1/2 overflow-hidden')
+      ul(id='msgWrap' class='h-96 w-1/2 overflow-scroll' scrolled='true')
+        each message in messages
+          li(class="h-100 p-2 m-2 bg-opacity-90 bg-white") 
+            h4= message.title
+            if ( !!locals.currentUser && locals.currentUser.memberStatus == 'member')
+              p='by' + ' ' + message.author.firstname + ' ' + message.author.lastname
+            p= message.text
+            p= message.createdAt
+    if (!!locals.currentUser)
+      if ( createMessage )
+        if !!errors
+          ul
+            each error in errors
+              li=error.msg
+        form(method='POST' action='/createMessage')
+          label(for='title') Title
+          input(name='title' placeholder='title' type='text')
+          label(for='text') Message
+          textarea(name='text' type='text')
+          button(type='submit' class='m-2 w-50 bg-opacity-70 rounded-md border-red-700 bg-red-700 text-white p-1 shadow-inner') Send
+      else
+        form(method='GET' action='/createMessage')
+          button(type='submit' class='m-2 w-50 bg-opacity-70 rounded-md border-red-700 bg-red-700 text-white p-1 shadow-inner') Create Message
+  script.
+    const element = document.getElementById("msgWrap");
+    element.scrollTop = element.scrollHeight;

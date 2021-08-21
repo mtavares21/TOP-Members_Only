@@ -1,7 +1,29 @@
 doctype html
 html
   head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
+    title='Buena Vista Club'
+    link(rel='stylesheet', href='stylesheets/tailwind.css' , type='text/css')
+  body( class='body mx-20 ' style={ 'background-repeat':'no-repeat','background-size':'cover', 'background-image':`url('https://i.etsystatic.com/15359898/r/il/1cd71f/1275037225/il_1588xN.1275037225_1pw3.jpg')` })
+    header( class='my-5 flex flex-row flex-nowrap items-center justify-between py-4')
+      a(href='/' )
+        div
+          img(width='35%' heigth='35%' src='images/logo.png' alt='Buena Vista Club')
+      if (!!locals.currentUser)
+        div(class='flex flex-row flex-nowrap justify-around items-center')
+          p #{locals.currentUser.firstname + ' ' + locals.currentUser.lastname + ' ' + locals.currentUser.memberStatus}
+          form(method='POST' action='/users/logOut')
+            button( class='m-2 w-20 bg-opacity-70 rounded-md border-red-700 bg-red-700 text-white p-1 shadow-inner' type='submit') Log-out
+          if ( locals.currentUser.memberStatus !== 'member' )
+            form(method='POST' action='/users/join')
+              button(class='m-2 w-20 bg-opacity-70 rounded-md border-red-700 bg-red-700 text-white p-1 shadow-inner' type='submit') Join
+      else
+        div(class='flex flex-row flex-nowrap justify-around items-center')
+          form(method='POST' action='/users/logIn')
+            label(for='username') Username
+            input(name='username' placeholder='username' type='text')
+            label(for='password') Password
+            input(name='password' type='password')
+            button(class='border-solid rounded'  type='submit') Log-in
+          form(method='GET' action='/users/signUp')
+              button( class='m-2 w-20 border rounded border-red-700 bg-red-700 text-white px-1 shadow-inner' type='submit') Sign-Up
     block content
