@@ -1,29 +1,24 @@
 doctype html
-html
+html(class="h-full")
   head
     title='Buena Vista Club'
-    link(rel='stylesheet', href='stylesheets/tailwind.css' , type='text/css')
-  body( class='body mx-20 ' style={ 'background-repeat':'no-repeat','background-size':'cover', 'background-image':`url('https://i.etsystatic.com/15359898/r/il/1cd71f/1275037225/il_1588xN.1275037225_1pw3.jpg')` })
-    header( class='my-5 flex flex-row flex-nowrap items-center justify-between py-4')
-      a(href='/' )
-        div
-          img(width='35%' heigth='35%' src='images/logo.png' alt='Buena Vista Club')
+    link(rel='stylesheet', href='/stylesheets/tailwind.css' , type='text/css')
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abel&family=Rajdhani:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=MonteCarlo&display=swap" rel="stylesheet">
+
+
+  body( class='body h-full' style={ 'font-family': 'Helvetica, Arial, sans-serif'})
+    header( class='md:h-40 flex flex-nowrap items-end p-5 justify-between shadow-xl' style={'font-family':'helvetica', 'background-repeat':'no-repeat','background-size':'cover', 'background-image':`url('/images/header2.png')` }) 
+      h1(class='xl:text-8xl l:text-7xl lg:text-6xl md:text-5xl text-3xl text-black underline' style={'font-family':'Helvetica' }) Buena Vista Club
       if (!!locals.currentUser)
-        div(class='flex flex-row flex-nowrap justify-around items-center')
-          p #{locals.currentUser.firstname + ' ' + locals.currentUser.lastname + ' ' + locals.currentUser.memberStatus}
+        div(class='container w-1/3 flex flex-row flex-nowrap justify-end items-center')
+          p(class='m-1 md:text-xl text-lg text-black font-sans font-md') #{locals.currentUser.firstname + ' ' + locals.currentUser.lastname}
           form(method='POST' action='/users/logOut')
-            button( class='m-2 w-20 bg-opacity-70 rounded-md border-red-700 bg-red-700 text-white p-1 shadow-inner' type='submit') Log-out
+            button( class='m-2 w-20 h-8 bg-white text-l font-sans font-light px-2 shadow-inner' type='submit') Log-out
           if ( locals.currentUser.memberStatus !== 'member' )
             form(method='POST' action='/users/join')
-              button(class='m-2 w-20 bg-opacity-70 rounded-md border-red-700 bg-red-700 text-white p-1 shadow-inner' type='submit') Join
-      else
-        div(class='flex flex-row flex-nowrap justify-around items-center')
-          form(method='POST' action='/users/logIn')
-            label(for='username') Username
-            input(name='username' placeholder='username' type='text')
-            label(for='password') Password
-            input(name='password' type='password')
-            button(class='border-solid rounded'  type='submit') Log-in
-          form(method='GET' action='/users/signUp')
-              button( class='m-2 w-20 border rounded border-red-700 bg-red-700 text-white px-1 shadow-inner' type='submit') Sign-Up
-    block content
+              button(class='m-2 w-20 h-8 bg-white font-sans font-light text-black text-l px-1 shadow-inner' type='submit') Join
+    
+  block content

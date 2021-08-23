@@ -20,7 +20,7 @@ exports.getMessages = function (req, res, next) {
         return item;
       });
       debug(messages);
-      res.render("index", { messages });
+      res.render("index", { messages, flash: req.flash("error") });
     });
 };
 
@@ -33,10 +33,14 @@ exports.getCreate = function (req, res, next) {
       if (err) {
         return next(err);
       }
-
+      const messages = result.map((item) => {
+        item.title = he.decode(item.title);
+        item.text = he.decode(item.text);
+        return item;
+      });
       res.render("index", {
         createMessage: true,
-        messages: result,
+        messages,
       });
     });
 };

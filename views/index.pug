@@ -1,31 +1,51 @@
 extend layout
 
 block content
-  if (!!messages)
-    div(class='h-1/2 overflow-hidden')
-      ul(id='msgWrap' class='h-96 w-1/2 overflow-scroll' scrolled='true')
-        each message in messages
-          li(class="h-100 p-2 m-2 bg-opacity-90 bg-white") 
-            h4= message.title
-            if ( !!locals.currentUser && locals.currentUser.memberStatus == 'member')
-              p='by' + ' ' + message.author.firstname + ' ' + message.author.lastname
-            p= message.text
-            p= message.createdAt
-    if (!!locals.currentUser)
-      if ( createMessage )
-        if !!errors
-          ul
-            each error in errors
-              li=error.msg
-        form(method='POST' action='/createMessage')
-          label(for='title') Title
-          input(name='title' placeholder='title' type='text')
-          label(for='text') Message
-          textarea(name='text' type='text')
-          button(type='submit' class='m-2 w-50 bg-opacity-70 rounded-md border-red-700 bg-red-700 text-white p-1 shadow-inner') Send
-      else
-        form(method='GET' action='/createMessage')
-          button(type='submit' class='m-2 w-50 bg-opacity-70 rounded-md border-red-700 bg-red-700 text-white p-1 shadow-inner') Create Message
-  script.
-    const element = document.getElementById("msgWrap");
-    element.scrollTop = element.scrollHeight;
+  div(class='w-full h-full p-20' style={'background-repeat':'no-repeat','background-size':'cover', 'background-image':`url('https://i.etsystatic.com/15359898/r/il/1cd71f/1275037225/il_1588xN.1275037225_1pw3.jpg')` })
+    div(class='h-4/5 flex flex-nowrap items-center justify-around')
+      if (!!messages)
+        div(class='w-1/2 h-full overflow-hidden')
+          ul(id='msgWrap' class='w-full h-full overflow-scroll')
+            each message in messages
+              li(class='flex flex-wrap justify-start h-1/3 p-2 m-2 bg-white overflow-scroll') 
+                p(class='w-full font-sans font-medium')
+                  | #{message.title}
+                p(class='w-full py-1 pl-1 font-sans font-light overflow-scroll') #{message.text}
+                if ( !!locals.currentUser && locals.currentUser.memberStatus == 'member')
+                  p(class='self-end  w-full font-sans font-ligth')= 'by ' + message.author.firstname + ' ' + message.author.lastname
+                p(class='self-end text-sm') #{message.createdAt.toString().slice(0,message.createdAt.toString().indexOf('GMT'))}
+        if (!!locals.currentUser)
+          if ( createMessage )
+              div( class='flex flex-wrap bg-white w-2/5 h-96 justify-center p-7 font-sans font-light')
+                if !!errors
+                  ul
+                    each error in errors
+                      li=error.msg
+                form( class='w-full' method='POST' action='/createMessage')
+                  label( class='w-full' for='title')
+                    strong Title
+                  input(class='w-full my-2 border' name='title' type='text')
+                  label(for='text')
+                    strong Message
+                  textarea(class='w-full mt-2 h-3/5 border' name='text' type='text')
+                  button(type='submit' class=' w-full font-sans font-light bg-black text-white p-1 shadow-inner') Post
+          if (!!!createMessage && locals.currentUser)
+            div( class='flex flex-wrap bg-black text-white w-1/4 m-20 justify-center p-7 py-10')
+              form(method='GET' action='/createMessage')
+                button(type='submit' class='m-2 w-50 bg-white font-sans font-light text-black py-1 px-2') Create Message
+        else
+          div( class='flex flex-wrap bg-black text-white w-1/4 m-20 h-2/3 justify-center p-7 py-10')
+            div(class='flex flex-wrap justify-around items-center')
+              form(method='POST' action='/users/logIn')
+                label(for='username' class='text-xl w-full font-sans font-thin') Username
+                input(class='w-full my-1 text-black font-sans' name='username' type='text')
+                label(class='w-full my-1' for='password' class='text-xl w-full font-sans font-thin') Password
+                input(class='w-full my-1 text-black' name='password' type='password')
+                p #{flash}
+                div( class='flex flex-nowrap flex-row justify-center mt-5')
+                  button(class='m-2 w-20 h-7 bg-white text-black font-sans font-light text-l px-1 shadow-inner'  type='submit') Log-in
+                  button( class='m-2 w-20 h-7 bg-white text-black font-sans font-light text-l px-1 shadow-inner' type='button') 
+                    a(href='/users/signUp') Sign-Up
+    script.
+      const element = document.getElementById("msgWrap");
+      element.scrollTop = element.scrollHeight;

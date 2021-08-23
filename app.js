@@ -11,7 +11,12 @@ const mongoose = require("mongoose");
 const debug = require("debug")("app");
 const bcrypt = require("bcryptjs");
 const User = require("./models/user");
+const flash = require("connect-flash");
+// Production
+var compression = require("compression");
+var helmet = require("helmet");
 
+// Database
 const Schema = mongoose.Schema;
 const mongoDb = process.env.DEV_MONGOURI;
 debug("MONGO_URI" + process.env.DEV_MONGOURI);
@@ -19,10 +24,13 @@ mongoose.connect(mongoDb, { useUnifiedTopology: true, useNewUrlParser: true });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo connection error"));
 
+// Router
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 
 var app = express();
+
+app.use(helmet());
 
 // Session and Passport setup
 app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
@@ -38,20 +46,15 @@ passport.use(
       if (!user) {
         return done(null, false, { message: "Incorrect username" });
       }
-      if (
-        bcrypt.compare(password, user.password, (err, res) => {
-          if (res) {
-            // passwords match! log user in
-            return done(null, user);
-          } else {
-            // passwords do not match!
-            return done(null, false, { message: "Incorrect password" });
-          }
-        })
-      ) {
-        return done(null, false, { message: "Incorrect password" });
-      }
-      return done(null, user);
+      bcrypt.compare(password, user.password, (err, res) => {
+        if (res) {
+          // passwords match! log user in
+          return done(null, user);
+        } else {
+          // passwords do not match!
+          return done(null, false, { message: "Incorrect password" });
+        }
+      });
     });
   })
 );
@@ -76,6 +79,9 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(flash());
+
+app.use(compression());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
@@ -96,7 +102,7 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
+  // render the error pag
   res.status(err.status || 500);
   res.render("error");
 });

@@ -97,7 +97,8 @@ exports.getLogIn = function (req, res, next) {
 exports.postLogIn = [
   passport.authenticate("local", {
     successRedirect: "/",
-    failureRedirect: "/users/logIn",
+    failureRedirect: "/",
+    failureFlash: true,
   }),
 ];
 
