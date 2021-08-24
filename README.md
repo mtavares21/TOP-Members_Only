@@ -2,7 +2,7 @@
 
 ### Objective
 
-Use PassaportJs to allow users to login to the app and only allow club members to see the names
+Implement PassaportJs Local Strategy for authentication and only allow club members to see the names
 of the posted messages author's.
 
 ### Description
